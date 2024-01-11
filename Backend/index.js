@@ -3,8 +3,37 @@ require("dotenv").config();
 const cors = require("cors");
 const connection = require("./db");
 const userRouter = require("./routes/user.routes");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
+
+// swagger API configuration //
+
+const options={
+    definition:{
+        openapi:"3.0.0",
+        info:{
+            title:"Chatify(clone)",
+            version:"1.0.0"
+        },
+        servers:[
+            {
+                url:"http://localhost:8080"
+            }
+        ]
+    },
+    apis:["./routes/*.js"]
+}
+
+//Swagger API specification
+
+const openAPIspec=swaggerJsDoc(options)
+
+
+// Swagger API UI build
+
+app.use("/docs",swaggerUi.serve,swaggerUi.setup(openAPIspec))
 
 app.use(cors());
 app.use(express.json())
