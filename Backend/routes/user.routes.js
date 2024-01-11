@@ -1,7 +1,8 @@
 const express = require("express");
 const UserModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
-const generateToken = require("../config/generateToken");
+const {generateToken} = require("../config/generateToken");
+const auth=require("../middlewares/auth.middleware")
 
 const userRouter = express.Router();
 
@@ -190,5 +191,18 @@ userRouter.post("/login", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+userRouter.get("/",auth,async(req,res)=>{
+    const keyword=req.query.search?{
+        $or:[
+            {
+                name:{$regex:req.query.search, $options:"i"},
+                email:{$regex:req.query.search, $options:"i"},
+            }
+        ]
+    }:{}
+    const users=await UserModel.find(keyword).find({_id:{$ne:req.userId}})
+    res.send(users)
+})
 
 module.exports = userRouter;
