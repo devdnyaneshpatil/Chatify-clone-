@@ -5,6 +5,93 @@ const generateToken = require("../config/generateToken");
 
 const userRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: User management
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserCredentials:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ * 
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         pic:
+ *           type: string
+ * 
+ *     UserResponse:
+ *       type: object
+ *       properties:
+ *         msg:
+ *           type: string
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ *         token:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * /user/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: New user has been added successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               msg: new user has been added
+ *               newUser:
+ *                 $ref: '#/components/schemas/User'
+ *               token:
+ *                 type: string
+ *       201:
+ *         description: User already exists
+ *         content:
+ *           application/json:
+ *             example:
+ *               msg: user already exist
+ *       400:
+ *         description: Bad request or error in registration
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Error message
+ */
+
+
 userRouter.post("/register", async (req, res) => {
   const { name, email, password, pic } = req.body;
   if (!name || !email || !password) {
@@ -37,6 +124,44 @@ userRouter.post("/register", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+
+/**
+ * @swagger
+ * /user/login:
+ *   post:
+ *     summary: Login with existing user credentials
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserCredentials'
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               msg: Login Successful
+ *               user:
+ *                 $ref: '#/components/schemas/User'
+ *               token:
+ *                 type: string
+ *       201:
+ *         description: Incorrect password or user not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               msg: please check your password or user not found
+ *       400:
+ *         description: Bad request or error in login
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Error message
+ */
 
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
