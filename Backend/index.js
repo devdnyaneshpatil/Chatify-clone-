@@ -5,6 +5,7 @@ const connection = require("./db");
 const userRouter = require("./routes/user.routes");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const chatRouter = require("./routes/chat.routes");
 
 const app = express();
 
@@ -33,11 +34,13 @@ const openAPIspec=swaggerJsDoc(options)
 
 // Swagger API UI build
 
-app.use("/docs",swaggerUi.serve,swaggerUi.setup(openAPIspec))
+
 
 app.use(cors());
 app.use(express.json())
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openAPIspec));
 app.use('/users',userRouter)
+app.use("/chats",chatRouter)
 
 app.listen(process.env.PORT || 5000, async () => {
   try {
