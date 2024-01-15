@@ -5,13 +5,13 @@ import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useState } from "react";
-//import { useHistory } from "react-router";
+import { useHistory } from "react-router";
 
-const SignUp = () => {
+const Signup = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
-  //const history = useHistory();
+  const history = useHistory();
 
   const [name, setName] = useState();
   const [email, setEmail] = useState();
@@ -51,7 +51,7 @@ const SignUp = () => {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:8080/users/register",
+        "/api/user",
         {
           name,
           email,
@@ -70,7 +70,7 @@ const SignUp = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setPicLoading(false);
-     // history.push("/chats");
+      history.push("/chats");
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -198,4 +198,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;
